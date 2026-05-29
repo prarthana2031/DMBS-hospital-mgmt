@@ -1,6 +1,6 @@
 // frontend/src/pages/Patients.js
 import React, { useEffect, useState, useCallback } from 'react';
-import { getPatients, createPatient, updatePatient, deletePatient } from '../api';
+import { getPatients, createPatient, updatePatient, deletePatient, getDashboardStats } from '../api';
 
 const EMPTY = {
   patient_id: '', first_name: '', last_name: '', gender: 'M',
@@ -58,6 +58,7 @@ function Modal({ title, data, onChange, onSave, onClose, isEdit }) {
 
 export default function Patients() {
   const [rows, setRows]       = useState([]);
+  const [total, setTotal]     = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch]   = useState('');
   const [modal, setModal]     = useState(null); // null | 'add' | 'edit'
@@ -66,8 +67,16 @@ export default function Patients() {
 
   const load = useCallback(() => {
     setLoading(true);
-    getPatients(search ? { search } : {})
-      .then(setRows).catch(console.error).finally(() => setLoading(false));
+    Promise.all([
+      getPatients(search ? { search } : {}),
+      getDashboardStats(),
+    ])
+      .then(([rowsRes, stats]) => {
+        setRows(rowsRes);
+        setTotal(stats.patients?.total ?? null);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [search]);
 
   useEffect(() => { load(); }, [load]);
@@ -108,7 +117,7 @@ export default function Patients() {
 
       <div className="table-card">
         <div className="table-toolbar">
-          <h3>All Patients ({rows.length})</h3>
+          <h3>All Patients {total !== null ? `(${total})` : `(${rows.length})`}</h3>
           <input className="search-input" placeholder="Search name / email / ID…"
             value={search} onChange={e => setSearch(e.target.value)} />
           <button className="btn btn-primary" onClick={openAdd}>+ Add Patient</button>
