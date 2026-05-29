@@ -21,8 +21,8 @@ router.get('/', async (req, res, next) => {
                     OR p.email      ILIKE $1
                     OR p.patient_id ILIKE $1`;
     }
-    query += ` GROUP BY p.patient_id ORDER BY p.patient_id
-               LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+    query += ` GROUP BY p.patient_id ORDER BY COALESCE(p.registration_date, '1970-01-01') DESC, p.patient_id
+           LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
     const { rows } = await pool.query(query, params);
