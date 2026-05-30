@@ -1,11 +1,16 @@
 // frontend/src/App.js
+import Login from "./pages/Login";
+import { useLocation } from "react-router-dom";
 import React from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink,Navigate} from 'react-router-dom';
 import './index.css';
 
+import Home from "./pages/Home";
+import DoctorsList from "./pages/DoctorsList";
 import Dashboard    from './pages/Dashboard';
 import Patients     from './pages/Patients';
 import Doctors      from './pages/Doctors';
+import BookAppointment from "./pages/BookAppointment";
 import Appointments from './pages/Appointments';
 import Treatments   from './pages/Treatments';
 import Billing      from './pages/Billing';
@@ -20,6 +25,49 @@ const icons = {
   billing:      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
 };
 
+function Layout() {
+  const location = useLocation();
+  
+
+ const publicRoutes = [
+  "/",
+  "/login",
+  "/doctors-list",
+  "/book-appointment"
+];
+
+const showSidebar = !publicRoutes.includes(location.pathname);
+console.log(location.pathname);
+const isLoggedIn = localStorage.getItem("staffUser");
+if (
+  !isLoggedIn &&
+      !publicRoutes.includes(location.pathname)
+
+){
+  return <Navigate to="/login" replace />;
+}
+  return (
+    <div className="app-shell">
+      {showSidebar && <Sidebar />}
+
+      
+      <main className={showSidebar ? "main-content" : "public-content"}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/doctors-list" element={<DoctorsList />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/patients" element={<Patients />} />
+          <Route path="/doctors" element={<Doctors />} />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/treatments" element={<Treatments />} />
+          <Route path="/billing" element={<Billing />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
 function Sidebar() {
   return (
     <aside className="sidebar">
@@ -29,14 +77,18 @@ function Sidebar() {
         </svg>
         MediCore
       </div>
-
       <div className="sidebar-section">
         <div className="sidebar-label">Overview</div>
-        <NavLink to="/" end className={({isActive}) => 'sidebar-link' + (isActive ? ' active' : '')}>
+
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            'sidebar-link' + (isActive ? ' active' : '')
+          }
+        >
           {icons.dashboard} Dashboard
         </NavLink>
       </div>
-
       <div className="sidebar-section">
         <div className="sidebar-label">Management</div>
         {[
@@ -51,6 +103,17 @@ function Sidebar() {
           </NavLink>
         ))}
       </div>
+      <div className="sidebar-footer">
+          <button
+            className="logout-btn"
+            onClick={() => {
+              localStorage.removeItem("staffUser");
+              window.location.href = "/";
+            }}
+          >
+            Logout
+          </button>
+  </div>
     </aside>
   );
 }
@@ -58,19 +121,7 @@ function Sidebar() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="app-shell">
-        <Sidebar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/"             element={<Dashboard />} />
-            <Route path="/patients"     element={<Patients />} />
-            <Route path="/doctors"      element={<Doctors />} />
-            <Route path="/appointments" element={<Appointments />} />
-            <Route path="/treatments"   element={<Treatments />} />
-            <Route path="/billing"      element={<Billing />} />
-          </Routes>
-        </main>
-      </div>
+      <Layout />
     </BrowserRouter>
   );
 }
