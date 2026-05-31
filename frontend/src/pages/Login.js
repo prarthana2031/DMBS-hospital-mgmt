@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("admin123");
 
   const handleLogin = async (e) => {
   e.preventDefault();
@@ -50,6 +50,8 @@ export default function Login() {
       <div className="login-card">
         <h1>MediCore</h1>
         <p>Hospital Management System</p>
+
+        <p className="login-hint">Demo: admin / admin123</p>
 
         <form onSubmit={handleLogin}>
           <input

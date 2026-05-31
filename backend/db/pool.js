@@ -8,10 +8,10 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
 
-  ssl: {
+  ssl: process.env.NODE_ENV === 'production' ? {
     require: true,
     rejectUnauthorized: false,
-  },
+  } : false,
 
   max: 5,
   idleTimeoutMillis: 30000,

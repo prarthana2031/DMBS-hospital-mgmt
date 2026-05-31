@@ -571,6 +571,12 @@ tbody td { padding: 10px 14px; font-size: 13px; }
   color:#2563eb;
 }
 
+.login-hint{
+  margin-top:12px;
+  font-size:14px;
+  color:#64748b;
+}
+
 .login-card form{
   display:flex;
   flex-direction:column;

@@ -3,6 +3,11 @@
 -- Generated from CSV datasets
 -- ============================================================
 
+-- STAFF (login credentials)
+INSERT INTO staff VALUES
+('S001','Admin','User','admin','admin123','Administrator','admin@hospital.com'),
+('S002','Jane','Reception','jane','jane123','Receptionist','jane.reception@hospital.com');
+
 -- DOCTORS
 INSERT INTO doctors VALUES
 ('D001','David','Taylor','Dermatology','8322010158',17,'Westside Clinic','dr.david.taylor@hospital.com'),

@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS treatments CASCADE;
 DROP TABLE IF EXISTS appointments CASCADE;
 DROP TABLE IF EXISTS patients CASCADE;
 DROP TABLE IF EXISTS doctors CASCADE;
+DROP TABLE IF EXISTS staff CASCADE;
 
 -- ============================================================
 -- DOCTORS
@@ -76,6 +77,19 @@ CREATE TABLE billing (
     amount              NUMERIC(10, 2) NOT NULL,
     payment_method      VARCHAR(30) CHECK (payment_method IN ('Cash', 'Credit Card', 'Insurance')),
     payment_status      VARCHAR(20) CHECK (payment_status IN ('Paid', 'Pending', 'Failed'))
+);
+
+-- ============================================================
+-- STAFF (login)
+-- ============================================================
+CREATE TABLE staff (
+    staff_id    VARCHAR(10) PRIMARY KEY,
+    first_name  VARCHAR(50) NOT NULL,
+    last_name   VARCHAR(50) NOT NULL,
+    username    VARCHAR(50) UNIQUE NOT NULL,
+    password    VARCHAR(100) NOT NULL,
+    role        VARCHAR(50),
+    email       VARCHAR(100)
 );
 
 -- ============================================================
